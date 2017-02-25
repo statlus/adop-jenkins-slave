@@ -6,18 +6,6 @@ ENV JAVA_VERSION=1.8.0_45
 ENV JAVA_TARBALL=server-jre-8u45-linux-x64.tar.gz
 ENV JAVA_HOME=/opt/java/jdk${JAVA_VERSION}
 
-# Swarm Env Variables (defaults)
-ENV SWARM_MASTER=http://jenkins:8080/jenkins/
-ENV SWARM_USER=jenkins
-ENV SWARM_PASSWORD=jenkins
-
-# Slave Env Variables
-ENV SLAVE_NAME="Swarm_Slave"
-ENV SLAVE_LABELS="docker aws ldap"
-ENV SLAVE_MODE="exclusive"
-ENV SLAVE_EXECUTORS=1
-ENV SLAVE_DESCRIPTION="Core Jenkins Slave"
-
 # Pre-requisites
 RUN yum -y install epel-release
 RUN yum install -y which \
@@ -56,7 +44,7 @@ RUN wget -q --no-check-certificate --directory-prefix=/tmp \
                 rm -rf /tmp/* && rm -rf /var/log/*
 
 # Make Jenkins a slave by installing swarm-client
-RUN curl -s -o /bin/swarm-client.jar -k http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar
+COPY slave.jar /bin/slave.jar
 
 # Start Swarm-Client
-CMD java -jar /bin/swarm-client.jar -executors ${SLAVE_EXECUTORS} -description "${SLAVE_DESCRIPTION}" -master ${SWARM_MASTER} -username ${SWARM_USER} -password ${SWARM_PASSWORD} -name "${SLAVE_NAME}" -labels "${SLAVE_LABELS}" -mode ${SLAVE_MODE}
+CMD java -jar /bin/slave.jar -jnlpUrl ${ADOPM_MASTER} -secret ${ADOPM_SECRET}
