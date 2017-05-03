@@ -10,6 +10,7 @@ ENV JAVA_HOME=/opt/java/jdk${JAVA_VERSION}
 ENV SWARM_MASTER=http://jenkins:8080/jenkins/
 ENV SWARM_USER=jenkins
 ENV SWARM_PASSWORD=jenkins
+ENV SLAVE_TUNNEL=http://jenkins-tunnel.com
 
 # Slave Env Variables
 ENV SLAVE_NAME="Swarm_Slave"
@@ -59,4 +60,4 @@ RUN wget -q --no-check-certificate --directory-prefix=/tmp \
 RUN curl -s -o /bin/swarm-client.jar -k http://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/2.0/swarm-client-2.0-jar-with-dependencies.jar
 
 # Start Swarm-Client
-CMD java -jar /bin/swarm-client.jar -executors ${SLAVE_EXECUTORS} -description "${SLAVE_DESCRIPTION}" -master ${SWARM_MASTER} -username ${SWARM_USER} -password ${SWARM_PASSWORD} -name "${SLAVE_NAME}" -labels "${SLAVE_LABELS}" -mode ${SLAVE_MODE}
+CMD java -jar /bin/swarm-client.jar -executors ${SLAVE_EXECUTORS} -description "${SLAVE_DESCRIPTION}" -master ${SWARM_MASTER} -username ${SWARM_USER} -password ${SWARM_PASSWORD} -name "${SLAVE_NAME}" -labels "${SLAVE_LABELS}" -mode ${SLAVE_MODE} -tunnel ${SLAVE_TUNNEL}
