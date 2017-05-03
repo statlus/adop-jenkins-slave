@@ -18,7 +18,7 @@ RUN yum install -y which \
     openssl \
     python-pip \
     libxslt && \
-    yum clean all 
+    yum clean all
 
 RUN pip install awscli==1.10.19
 
